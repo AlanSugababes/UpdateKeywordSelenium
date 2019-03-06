@@ -19,7 +19,7 @@ public class SentinelTestRunner {
 	
 	@BeforeClass
 	public static void beforeTestSetup() {
-		extent = new ExtentReports(Constants.ReportLocation);
+		extent = new ExtentReports(Constants.REPORTLOCATION + Constants.REPORTNAME);
 	}
 	@AfterClass
 	public static void afterTestTeardown() {

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
@@ -20,31 +21,30 @@ public class SentinelSteps {
 	
 	public String duplicateWord = "bomb";
 	public String successfulAddition = "Keyword has been submitted";
-	public String emptyAddition = "Error 301: No keyword entered, please enter a keyword!";
-	public String duplicateAddition = "Error 302: Duplicate keyword entered please enter a new keyword!";
+	public String emptyAddition = "Error: No keyword entered, please enter a keyword!";
+	public String duplicateAddition = "Error: Duplicate keyword entered please enter a new keyword!";
 
 	
 	public WebDriver driver;
-	public ExtentTest test;
-	public ExtentReports extent;
+	WebDriverWait wait;
+	ExtentTest test;
+	ExtentReports extent;
 
 	@Before
 	public void setup() {
-		System.setProperty("webdriver.chrome.driver",Constants.ChromeDriver);
-		test = extent.startTest("Adding Keyword Test");
+		System.setProperty("webdriver.chrome.driver",Constants.CHROMEDRIVER);
 		driver = new ChromeDriver();
+		driver.manage().window().maximize();
+		wait = new WebDriverWait(driver, 10);
+		test = SentinelTestRunner.extent.startTest("Adding Keyword Test");
 	}
 
-	@After
-	public void teardown() {
-		driver.quit();
-	}
 	
 	@Given("^the correct web address$")
 	public void the_correct_web_address() {
-		test.log(LogStatus.INFO,"Loading webpage and maximizing");
-		driver.manage().window().maximize();
 		driver.get(Constants.URL);
+		test.log(LogStatus.INFO,"Loading webpage and maximizing");
+		
 	}
 
 	@When("^I click submit with a valid keyword$")
@@ -62,9 +62,9 @@ public class SentinelSteps {
 	public void a_message_stating_the_keyword_has_been_added_is_displayed() {
 		KeywordAdditionPage addition = PageFactory.initElements(driver,KeywordAdditionPage.class);
 		
-			if(successfulAddition == addition.getResult()) {
+			if(successfulAddition.equals(addition.getResultSubmitted())) {
 				test.log(LogStatus.PASS,"Test Passed");
-				assertEquals(successfulAddition, addition.getResult());
+				assertEquals(successfulAddition, addition.getResultSubmitted());
 			}else {
 				test.log(LogStatus.FAIL,"Test Failed");
 		}
@@ -83,9 +83,9 @@ public class SentinelSteps {
 	public void an_error_message_is_displayed() {
 		KeywordAdditionPage addition = PageFactory.initElements(driver, KeywordAdditionPage.class);
 		
-			if(duplicateAddition == addition.getResult()) {
+			if(duplicateAddition.equals(addition.getResultDuplicate())) {
 				test.log(LogStatus.PASS, "Test Passed");
-				assertEquals(duplicateAddition, addition.getResult());
+				assertEquals(duplicateAddition, addition.getResultDuplicate());
 			}else {
 				test.log(LogStatus.FAIL, "Test Failed");
 			}
@@ -105,12 +105,17 @@ public class SentinelSteps {
 	public void an_error_messaged_is_displayed() {
 		KeywordAdditionPage addition = PageFactory.initElements(driver, KeywordAdditionPage.class);
 		
-			if(emptyAddition == addition.getResult()) {
+			if(emptyAddition.equals(addition.getResultNoKeyword())) {
 				test.log(LogStatus.PASS, "Test Passed");
-				assertEquals(emptyAddition, addition.getResult());
+				assertEquals(emptyAddition, addition.getResultNoKeyword());
 			}else {
 				test.log(LogStatus.FAIL, "Test Failed");
 			}
+	}
+	
+	@After
+	public void teardown() {
+		driver.quit();
 	}
 	
 	
