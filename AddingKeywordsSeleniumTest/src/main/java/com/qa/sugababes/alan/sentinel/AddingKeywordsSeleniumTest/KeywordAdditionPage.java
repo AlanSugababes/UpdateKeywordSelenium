@@ -8,14 +8,20 @@ public class KeywordAdditionPage {
 
 	WebElement driver;
 	
-	@FindBy(xpath = "")
+	@FindBy(xpath = "//*[@id=\"submitButton\"]")
 	WebElement SubmitButton;
 	
-	@FindBy(xpath = "")
+	@FindBy(xpath = "//*[@id=\"NewKeyword\"]")
 	WebElement KeywordInput;
 	
-	@FindBy(xpath = "")
-	WebElement StateMessage;
+	@FindBy(xpath = "//*[@id=\"root\"]/div/div/nav/div/div/p[4]")
+	WebElement StateMessageSubmitted;
+	
+	@FindBy(xpath = "//*[@id=\"root\"]/div/div/nav/div/div/p[3]")
+	WebElement StateMessageDuplicate;
+	
+	@FindBy(xpath = "//*[@id=\"root\"]/div/div/nav/div/div/p[2]")
+	WebElement StateMessageNoKeyword;
 	
 	public void clickSubmit() {
 		SubmitButton.click();
@@ -34,8 +40,18 @@ public class KeywordAdditionPage {
 		KeywordInput.sendKeys(Keys.BACK_SPACE);
 	}
 	
-	public String getResult() {
-		return StateMessage.getText();
+	public String getResultSubmitted() {
+		return StateMessageSubmitted.getText();
 	}
+
+	public String getResultDuplicate() {
+		return StateMessageDuplicate.getText();
+	}
+
+	public String getResultNoKeyword() {
+		return StateMessageNoKeyword.getText();
+	}
+	
+	
 
 }
